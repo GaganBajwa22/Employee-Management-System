@@ -77,27 +77,7 @@ export default function LoginPage() {
                 <Input id="password" name="password" type="password" required />
               </div>
 
-              {!isLogin && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="space-y-2 overflow-hidden"
-                >
-                  <Label htmlFor="role">Role</Label>
-                  <Select name="role" defaultValue="employee">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="employee">Employee</SelectItem>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Demo purposes: Select your role directly.
-                  </p>
-                </motion.div>
-              )}
+
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
