@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"
+
+import Link from "next/link"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import {
@@ -11,43 +14,62 @@ import {
 import { EmployeeRow } from "./employee-row"
 import { CreateEmployeeDialog } from "./create-employee-dialog"
 
-export default async function AdminEmployeesPage() {
+export default async function AdminEmployeesPage(props: any) {
   const supabase = await createClient()
 
+  // ✅ FIX 1: unwrap searchParams (IMPORTANT)
+  const searchParams = await props.searchParams
+
+  // AUTH CHECK
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     redirect("/login")
   }
 
-  const { data: employees } = await supabase
+  // PAGINATION LOGIC
+  const page = Number(searchParams?.page) || 1
+  const limit = 4
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
+  // FETCH PAGINATED DATA
+  const { data: employees, count, error } = await supabase
     .from("profiles")
-    .select("*")
+    .select("*", { count: "exact" })
     .neq("name", "[DELETED_ACCOUNT]")
     .order("created_at", { ascending: false })
+    .range(from, to)
+
+  if (error) {
+    console.error(error)
+  }
+
+  const totalPages = Math.ceil((count || 0) / limit)
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Team Members</h2>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Manage your organization's members. Add, update roles, or remove profiles.
-          </p>
+          <h2 className="text-3xl font-bold">Team Members</h2>
         </div>
         <CreateEmployeeDialog />
       </div>
 
-      <div className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-sm">
+      {/* TABLE */}
+      <div className="rounded-xl border overflow-hidden">
         <Table>
-          <TableHeader className="bg-muted/30">
+          <TableHeader>
             <TableRow>
-              <TableHead className="w-[300px]">Employee</TableHead>
+              <TableHead>Employee</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
             {employees?.length ? (
               employees.map((emp) => (
@@ -55,7 +77,7 @@ export default async function AdminEmployeesPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                <TableCell colSpan={5} className="text-center">
                   No team members found.
                 </TableCell>
               </TableRow>
@@ -63,7 +85,42 @@ export default async function AdminEmployeesPage() {
           </TableBody>
         </Table>
       </div>
-      
+
+      {/* PAGINATION */}
+      <div className="flex justify-center gap-2 mt-4">
+        
+        <Link
+          href={`?page=${page - 1}`}
+          className={`px-3 py-1 border rounded ${
+            page === 1 ? "pointer-events-none opacity-50" : ""
+          }`}
+        >
+          Prev
+        </Link>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Link
+            key={i}
+            href={`?page=${i + 1}`}
+            className={`px-3 py-1 border rounded ${
+              page === i + 1 ? "bg-black text-white" : ""
+            }`}
+          >
+            {i + 1}
+          </Link>
+        ))}
+
+        <Link
+          href={`?page=${page + 1}`}
+          className={`px-3 py-1 border rounded ${
+            page === totalPages ? "pointer-events-none opacity-50" : ""
+          }`}
+        >
+          Next
+        </Link>
+
+      </div>
+
     </div>
   )
 }

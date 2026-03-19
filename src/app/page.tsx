@@ -36,9 +36,9 @@ export default function LandingPage() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="max-w-3xl space-y-8"
         >
-          <div className="inline-flex items-center rounded-full border border-border/50 bg-muted/50 px-3 py-1 text-sm font-medium backdrop-blur-sm">
+          {/* <div className="inline-flex items-center rounded-full border border-border/50 bg-muted/50 px-3 py-1 text-sm font-medium backdrop-blur-sm">
             🎉 <span className="ml-2 border-l border-border/50 pl-2 text-muted-foreground">Version 1.0 is now live</span>
-          </div>
+          </div> */}
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 drop-shadow-sm">
             Modernize your <br/>

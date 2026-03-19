@@ -31,7 +31,7 @@ export function CreateEmployeeDialog() {
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true)
     const result = await createEmployeeViaAdmin(formData)
-    
+
     if (result?.error) {
       toast.error(result.error)
     } else {
@@ -60,10 +60,10 @@ export function CreateEmployeeDialog() {
               <Label htmlFor="name">Full Name</Label>
               <Input id="name" name="name" placeholder="E.g. John Doe" required />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email address</Label>
-              <Input id="email" name="email" type="email" placeholder="john@company.com" required />
+              <Input id="email" name="email" type="email" placeholder="Email@.com" required />
             </div>
 
             <div className="space-y-2">

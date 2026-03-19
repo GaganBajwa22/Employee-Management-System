@@ -63,13 +63,13 @@ export default function LoginPage() {
                   className="space-y-2 overflow-hidden"
                 >
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" name="name" placeholder="John Doe" required />
+                  <Input id="name" name="name" placeholder="Enter Your Name" required />
                 </motion.div>
               )}
               
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="john@company.com" required />
+                <Input id="email" name="email" type="email" placeholder="Email@.com" required />
               </div>
               
               <div className="space-y-2">
